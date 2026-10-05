@@ -1,0 +1,9 @@
+supported_targets = "js"
+
+import {
+  "btlqql/moon_findcore" @engine,
+  "moonbitlang/core/json",
+  "moonbitlang/core/env",
+}
+
+pkgtype(kind: "executable")
