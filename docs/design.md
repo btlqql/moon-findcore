@@ -1,11 +1,17 @@
-# Moon FindCore architecture
+# Implemented architecture
 
-Status: development plan; functionality must be checked against release documentation.
+## Core
 
-目标：提供可嵌入 MoonBit 应用的持久化全文检索库，并通过 CLI 搜索真实文档。
+Per-field positional postings; Latin/accented-word and CJK unigram analyser; BM25 scoring; field-qualified terms; quoted phrases; parentheses; AND/OR/NOT; implicit AND; deterministic tie handling; upsert/delete; versioned source snapshots; term highlight ranges.
 
-核心模块：文本分析；倒排表；BM25；布尔与短语查询解析；字段筛选；增量更新删除；版本化索引存取；命中片段与 CLI。英文词法和中文字符双字切分的行为分别声明；不宣称自然语言理解或完备中文分词。
+## Boundaries
 
-三个场景：开源软件文档搜索；公开工单问题检索；混合中英文知识文档检索。各场景建立有来源和许可证的语料、固定查询集以及应命中的文档；排名质量与算法正确性分别评价。
+All processing is in memory. Snapshots store source documents and rebuild postings on load. CJK matching is character based, without a dictionary segmenter. No wildcard, fuzzy search or stemming. Highlight ranges use Unicode code-point offsets and identify positive query terms, not complete phrase spans; they are data rather than HTML. Results use Double scores; displayed serialised scores may round to the same value.
 
-验收：一万文档记录索引体积、构建耗时与查询分位耗时；BM25 数值、布尔结果和短语位置使用独立计算核验；保存重载结果一致。失败验证覆盖畸形查询、文档更新/删除、损坏索引、Unicode 边界。十月为单机检索库，不做向量数据库或分布式搜索。
+## Integration
+
+The core accepts semantic values and returns deterministic JSON-shaped reports. Host adapters handle files, network or processes; they invoke the compiled MoonBit engine. The CLI package declares `supported_targets = "js"`; other backends test the portable core.
+
+## Validation evidence
+
+Fixture cases are hand-checked assertions. Independent reference checks and integration scripts are runnable from a clean checkout. CI executes four core backends and host checks. Historical proposal targets are not release results.
