@@ -1,0 +1,42 @@
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "MoonBit native compiler 中文"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "native MoonBit examples"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "unrelated"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "type": "delete",
+      "id": "a"
+    },
+    {
+      "type": "upsert",
+      "id": "b",
+      "document": {
+        "id": "b",
+        "fields": {
+          "text": "updated"
+        }
+      }
+    }
+  ],
+  "queries": [
+    "MoonBit",
+    "updated"
+  ]
+}

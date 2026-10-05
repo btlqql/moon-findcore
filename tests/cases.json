@@ -1,0 +1,208 @@
+[
+  {
+    "name": "boolean search",
+    "request": {
+      "documents": [
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        },
+        {
+          "id": "b",
+          "fields": {
+            "text": "native MoonBit examples"
+          }
+        },
+        {
+          "id": "c",
+          "fields": {
+            "text": "unrelated"
+          }
+        }
+      ],
+      "queries": [
+        "MoonBit AND native",
+        "MoonBit NOT examples",
+        "NOT MoonBit"
+      ]
+    },
+    "expected": {
+      "results/0/total": 2,
+      "results/1/hits/0/id": "a",
+      "results/2/hits/0/id": "c"
+    },
+    "error": false
+  },
+  {
+    "name": "phrase positions",
+    "request": {
+      "documents": [
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        },
+        {
+          "id": "b",
+          "fields": {
+            "text": "native MoonBit examples"
+          }
+        },
+        {
+          "id": "c",
+          "fields": {
+            "text": "unrelated"
+          }
+        }
+      ],
+      "queries": [
+        "\"native compiler\"",
+        "\"MoonBit compiler\"",
+        "中文"
+      ]
+    },
+    "expected": {
+      "results/0/hits/0/id": "a",
+      "results/1/total": 0,
+      "results/2/hits/0/id": "a"
+    },
+    "error": false
+  },
+  {
+    "name": "delete update",
+    "request": {
+      "documents": [
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        },
+        {
+          "id": "b",
+          "fields": {
+            "text": "native MoonBit examples"
+          }
+        },
+        {
+          "id": "c",
+          "fields": {
+            "text": "unrelated"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "type": "delete",
+          "id": "a"
+        },
+        {
+          "type": "upsert",
+          "id": "b",
+          "document": {
+            "id": "b",
+            "fields": {
+              "text": "updated"
+            }
+          }
+        }
+      ],
+      "queries": [
+        "MoonBit",
+        "updated"
+      ]
+    },
+    "expected": {
+      "results/0/total": 0,
+      "results/1/hits/0/id": "b"
+    },
+    "error": false
+  },
+  {
+    "name": "invalid syntax",
+    "request": {
+      "documents": [
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        },
+        {
+          "id": "b",
+          "fields": {
+            "text": "native MoonBit examples"
+          }
+        },
+        {
+          "id": "c",
+          "fields": {
+            "text": "unrelated"
+          }
+        }
+      ],
+      "queries": [
+        "(MoonBit AND"
+      ]
+    },
+    "expected": {},
+    "error": true
+  },
+  {
+    "name": "duplicate identifiers",
+    "request": {
+      "documents": [
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        },
+        {
+          "id": "a",
+          "fields": {
+            "text": "MoonBit native compiler 中文"
+          }
+        }
+      ]
+    },
+    "expected": {},
+    "error": true
+  },
+  {
+    "name": "snapshot version",
+    "request": {
+      "snapshot": {
+        "version": 2,
+        "fields": [
+          "text"
+        ],
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "MoonBit native compiler 中文"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "native MoonBit examples"
+            }
+          },
+          {
+            "id": "c",
+            "fields": {
+              "text": "unrelated"
+            }
+          }
+        ]
+      }
+    },
+    "expected": {},
+    "error": true
+  }
+]

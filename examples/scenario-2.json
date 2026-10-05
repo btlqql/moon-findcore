@@ -1,0 +1,27 @@
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "MoonBit native compiler 中文"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "native MoonBit examples"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "unrelated"
+      }
+    }
+  ],
+  "queries": [
+    "\"native compiler\"",
+    "\"MoonBit compiler\"",
+    "中文"
+  ]
+}
