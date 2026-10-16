@@ -299,7 +299,9 @@ fn QueryParser::expression(
 
 ///|
 pub fn parse_query(source : String) -> Query raise {
+  if source.length() > 65536 { raise InputError("query text exceeds 64 KiB") }
   let parser : QueryParser = { tokens: query_tokens(source), cursor: 0, }
+  if parser.tokens.length() > 256 { raise InputError("query exceeds 256 tokens") }
   let result = parser.expression(1, 0)
   if parser.peek() != "" {
     raise InputError("unexpected closing parenthesis")
@@ -406,6 +408,7 @@ pub fn run(request : Value) -> Value raise {
     arr(get(request, "documents")).copy()
   }
   if get(request, "actions") != Null {
+    ignore(build_index(documents, fields))
     for action in arr(get(request, "actions")) {
       let id = str(get(action, "id"))
       let kind = str(get(action, "type"))
@@ -432,10 +435,11 @@ pub fn run(request : Value) -> Value raise {
   if k1 <= 0.0 || b < 0.0 || b > 1.0 {
     raise InputError("invalid BM25 parameters")
   }
-  let limit = optional_num(get(request, "limit"), 10.0).to_int()
-  if limit < 0 || limit > 1000 {
+  let requested_limit = optional_num(get(request, "limit"), 10.0)
+  if requested_limit < 0.0 || requested_limit > 1000.0 || requested_limit.floor() != requested_limit {
     raise InputError("limit out of range")
   }
+  let limit = requested_limit.to_int()
   let results = queries.map(fn(source) {
     let parsed = parse_query(source)
     let scores = index.evaluate(parsed, k1, b)

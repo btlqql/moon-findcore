@@ -1,10 +1,10 @@
 ///|
 fn collect_positive(query : Query, terms : Map[String, Bool]) -> Unit {
   match query {
-    Term(_, term) => terms[term] = true
-    Phrase(_, words) =>
+    Term(field, term) => terms[field.unwrap_or("") + ":" + term] = true
+    Phrase(field, words) =>
       for word in words {
-        terms[word] = true
+        terms[field.unwrap_or("") + ":" + word] = true
       }
     And(a, b) | Or(a, b) => {
       collect_positive(a, terms)
@@ -27,7 +27,7 @@ fn highlights(
     let tokens = analyze(optional_str(get(get(document, "fields"), field), ""))
     result[field] = Array(
       tokens
-      .filter(fn(token) { terms.contains(token.term) })
+      .filter(fn(token) { terms.contains(":" + token.term) || terms.contains(field + ":" + token.term) })
       .map(fn(token) {
         record([
           ("term", String(token.term)),
