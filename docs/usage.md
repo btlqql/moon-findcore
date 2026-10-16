@@ -231,3 +231,334 @@ Expected: nonzero exit with an input error.
 ```
 
 Expected: nonzero exit with an input error.
+
+
+# 0.2.0 additional executable scenarios
+
+## filtered pagination with full result facets
+
+```json
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "y",
+        "kind": "reference"
+      }
+    },
+    {
+      "id": "d",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": null
+      }
+    },
+    {
+      "id": "e",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x"
+      }
+    }
+  ],
+  "queries": [
+    "moon"
+  ],
+  "where": {
+    "tenant": "x"
+  },
+  "facets": [
+    "kind"
+  ],
+  "offset": 1,
+  "limit": 1
+}
+```
+
+Expected result fields:
+
+```json
+{
+  "results/0/total": 4,
+  "results/0/hits/0/id": "b",
+  "results/0/offset": 1,
+  "results/0/facets/kind/missing": 1,
+  "results/0/facets/kind/buckets/0/value": "guide",
+  "results/0/facets/kind/buckets/0/count": 2,
+  "results/0/facets/kind/buckets/1/value": null,
+  "results/0/facets/kind/buckets/1/count": 1
+}
+```
+
+## null filter does not include missing
+
+```json
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "y",
+        "kind": "reference"
+      }
+    },
+    {
+      "id": "d",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": null
+      }
+    },
+    {
+      "id": "e",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x"
+      }
+    }
+  ],
+  "queries": [
+    "moon"
+  ],
+  "where": {
+    "kind": null
+  }
+}
+```
+
+Expected result fields:
+
+```json
+{
+  "results/0/total": 1,
+  "results/0/hits/0/id": "d"
+}
+```
+
+## out of range page retains totals
+
+```json
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "y",
+        "kind": "reference"
+      }
+    },
+    {
+      "id": "d",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": null
+      }
+    },
+    {
+      "id": "e",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x"
+      }
+    }
+  ],
+  "queries": [
+    "moon"
+  ],
+  "offset": 10,
+  "limit": 2,
+  "facets": [
+    "tenant"
+  ]
+}
+```
+
+Expected result fields:
+
+```json
+{
+  "results/0/total": 5,
+  "results/0/hits": [],
+  "results/0/facets/tenant/buckets/0/count": 4
+}
+```
+
+## invalid offset
+
+```json
+{
+  "documents": [],
+  "offset": 0.5
+}
+```
+
+Expected: an input error.
+
+## invalid metadata shape
+
+```json
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": [
+        1
+      ]
+    }
+  ]
+}
+```
+
+Expected: an input error.
+
+## duplicate facets
+
+```json
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "y",
+        "kind": "reference"
+      }
+    },
+    {
+      "id": "d",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": null
+      }
+    },
+    {
+      "id": "e",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x"
+      }
+    }
+  ],
+  "facets": [
+    "kind",
+    "kind"
+  ]
+}
+```
+
+Expected: an input error.

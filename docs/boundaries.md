@@ -1,3 +1,3 @@
-# Version 0.1.0 boundaries
+# Version 0.2.0 boundaries
 
-All processing is in memory. Snapshots store source documents and rebuild postings on load. CJK matching is character based, without a dictionary segmenter. No wildcard, fuzzy search or stemming. Highlight ranges use Unicode code-point offsets and identify positive query terms, not complete phrase spans; they are data rather than HTML. Results use Double scores; displayed serialised scores may round to the same value.
+当前索引和查询均在内存中完成，快照载入会重建索引，没有磁盘倒排数据库、模糊搜索、通配符、词干化或语义向量检索。高亮输出 Unicode 码点范围，不是 HTML 或完整短语跨度。元数据筛选不替代鉴权；分面是完整值统计，不展开多值字段。不同分数在序列化显示时可能因浮点舍入看起来相同。

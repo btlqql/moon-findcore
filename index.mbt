@@ -81,7 +81,9 @@ pub fn build_index(
     fields,
   }
   for document in documents {
-    if get(document, "metadata") != Null { ignore(obj(get(document, "metadata"))) }
+    if get(document, "metadata") != Null {
+      ignore(obj(get(document, "metadata")))
+    }
     let id = str(get(document, "id"))
     if id == "" || index.documents.contains(id) {
       raise InputError("empty or duplicate document ID")
@@ -300,9 +302,13 @@ fn QueryParser::expression(
 
 ///|
 pub fn parse_query(source : String) -> Query raise {
-  if source.length() > 65536 { raise InputError("query text exceeds 64 KiB") }
+  if source.length() > 65536 {
+    raise InputError("query text exceeds 64 KiB")
+  }
   let parser : QueryParser = { tokens: query_tokens(source), cursor: 0, }
-  if parser.tokens.length() > 256 { raise InputError("query exceeds 256 tokens") }
+  if parser.tokens.length() > 256 {
+    raise InputError("query exceeds 256 tokens")
+  }
   let result = parser.expression(1, 0)
   if parser.peek() != "" {
     raise InputError("unexpected closing parenthesis")
@@ -437,19 +443,31 @@ pub fn run(request : Value) -> Value raise {
     raise InputError("invalid BM25 parameters")
   }
   let requested_limit = optional_num(get(request, "limit"), 10.0)
-  if requested_limit < 0.0 || requested_limit > 1000.0 || requested_limit.floor() != requested_limit {
+  if requested_limit < 0.0 ||
+    requested_limit > 1000.0 ||
+    requested_limit.floor() != requested_limit {
     raise InputError("limit out of range")
   }
   let limit = requested_limit.to_int()
   let requested_offset = optional_num(get(request, "offset"), 0.0)
-  if requested_offset < 0.0 || requested_offset > 1000000.0 || requested_offset.floor() != requested_offset { raise InputError("offset must be an integer between zero and one million") }
+  if requested_offset < 0.0 ||
+    requested_offset > 1000000.0 ||
+    requested_offset.floor() != requested_offset {
+    raise InputError("offset must be an integer between zero and one million")
+  }
   let offset = requested_offset.to_int()
-  let metadata_query = if get(request, "where") == Null { Map([]) } else { obj(get(request, "where")) }
+  let metadata_query = if get(request, "where") == Null {
+    Map([])
+  } else {
+    obj(get(request, "where"))
+  }
   let facets = facet_fields(get(request, "facets"))
   let results = queries.map(fn(source) {
     let parsed = parse_query(source)
     let scores = index.evaluate(parsed, k1, b)
-    scores.retain(fn(id, _) { metadata_matches(index.documents[id], metadata_query) })
+    scores.retain(fn(id, _) {
+      metadata_matches(index.documents[id], metadata_query)
+    })
     let ids = scores.keys().collect()
     ids.sort_by(fn(a, b) {
       let c = scores[b].compare(scores[a])
@@ -460,7 +478,9 @@ pub fn run(request : Value) -> Value raise {
       }
     })
     let hits : Array[Value] = []
-    for i = offset.min(ids.length()); i < ids.length().min(offset + limit); i = i + 1 {
+    for i = offset.min(ids.length())
+        i < ids.length().min(offset + limit)
+        i = i + 1 {
       let id = ids[i]
       hits.push(
         record([

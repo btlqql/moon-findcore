@@ -27,7 +27,10 @@ fn highlights(
     let tokens = analyze(optional_str(get(get(document, "fields"), field), ""))
     result[field] = Array(
       tokens
-      .filter(fn(token) { terms.contains(":" + token.term) || terms.contains(field + ":" + token.term) })
+      .filter(fn(token) {
+        terms.contains(":" + token.term) ||
+        terms.contains(field + ":" + token.term)
+      })
       .map(fn(token) {
         record([
           ("term", String(token.term)),

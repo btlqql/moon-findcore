@@ -3,9 +3,9 @@
 Full text indexing and search, implemented in MoonBit with a JSON CLI and reusable library API.
 
 - Repository: [https://github.com/btlqql/moon-findcore](https://github.com/btlqql/moon-findcore)
-- Package: `btlqql/moon_findcore@0.1.0`
+- Package: `btlqql/moon_findcore@0.2.0`
 - License: Apache-2.0
-- Release scope: **0.1.0 initial implementation**. The broader competition proposal in `docs/proposal.md` is a reference design, not a claim that every planned capability is implemented.
+- Release scope: **0.2.0 revised component release**. The broader competition proposal in `docs/proposal.md` is a reference design, not a claim that every planned capability is implemented.
 
 ## Implemented
 
@@ -27,7 +27,7 @@ Pass `-` to read a UTF-8 JSON request from stdin. A single request must be at mo
 ## Library use
 
 ```sh
-moon add btlqql/moon_findcore@0.1.0
+moon add btlqql/moon_findcore@0.2.0
 ```
 
 In the consumer's `moon.pkg`:
@@ -59,10 +59,23 @@ node scripts/check.mjs
 python -B scripts/reference.py
 ```
 
-There are 6 checked fixture cases in `tests/cases.json`, executed both in MoonBit white-box tests and through the actual Node CLI. Independent reference checks use Python's standard library or separately written algorithms. Fixtures are synthetic and are not presented as production adoption evidence. See [input and output examples](docs/usage.md) and [current boundaries](docs/boundaries.md).
+There are 12 checked fixture cases in `tests/cases.json`, executed both in MoonBit white-box tests and through the actual Node CLI. Independent reference checks use Python's standard library or separately written algorithms. Fixtures are synthetic and are not presented as production adoption evidence. See [input and output examples](docs/usage.md) and [current boundaries](docs/boundaries.md).
 
 ## Current boundaries
 
 All processing is in memory. Snapshots store source documents and rebuild postings on load. CJK matching is character based, without a dictionary segmenter. No wildcard, fuzzy search or stemming. Highlight ranges use Unicode code-point offsets and identify positive query terms, not complete phrase spans; they are data rather than HTML. Results use Double scores; displayed serialised scores may round to the same value.
 
 See [source and dependency attribution](THIRD_PARTY.md). This release does not establish competition eligibility or organizer acceptance.
+
+
+## Version 0.2.0 revision
+
+Exact metadata filtering, bounded offset pagination and facets over the complete filtered result set. Missing metadata fields are distinct from explicit null. Equal-count facet buckets use explicit lexical canonical-value ordering.
+
+当前索引和查询均在内存中完成，快照载入会重建索引，没有磁盘倒排数据库、模糊搜索、通配符、词干化或语义向量检索。高亮输出 Unicode 码点范围，不是 HTML 或完整短语跨度。元数据筛选不替代鉴权；分面是完整值统计，不展开多值字段。不同分数在序列化显示时可能因浮点舍入看起来相同。
+
+Run the additional complete scenario:
+
+```sh
+moon run cmd/main --target js -- examples/scenario-4.json
+```
