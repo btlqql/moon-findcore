@@ -1,0 +1,64 @@
+{
+  "documents": [
+    {
+      "id": "a",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "b",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": "guide"
+      }
+    },
+    {
+      "id": "c",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "y",
+        "kind": "reference"
+      }
+    },
+    {
+      "id": "d",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x",
+        "kind": null
+      }
+    },
+    {
+      "id": "e",
+      "fields": {
+        "text": "moon"
+      },
+      "metadata": {
+        "tenant": "x"
+      }
+    }
+  ],
+  "queries": [
+    "moon"
+  ],
+  "where": {
+    "tenant": "x"
+  },
+  "facets": [
+    "kind"
+  ],
+  "offset": 1,
+  "limit": 1
+}

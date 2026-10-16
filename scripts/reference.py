@@ -26,3 +26,26 @@ for a,b in zip(hits,hits[1:]):
 ties = run({'documents':[{'id':i,'fields':{'text':'alpha'}} for i in ['z','b','a']], 'queries':['alpha']})
 assert [h['id'] for h in ties['results'][0]['hits']] == ['a','b','z']
 print('Independent BM25 formula: 30 documents, ranking and snapshot reload passed')
+
+# Revision oracle: exact metadata filtering, pagination and facets against Counter.
+from collections import Counter
+random.seed(20261016)
+for iteration in range(20):
+    docs=[]
+    for i in range(20):
+        metadata={'tenant':random.choice(['x','y'])}
+        if random.randrange(3): metadata['kind']=random.choice(['guide','reference',None])
+        docs.append({'id':f'{i:02}','fields':{'text':'alpha'},'metadata':metadata})
+    chosen=[doc for doc in docs if doc['metadata']['tenant']=='x']
+    offset=random.randrange(25); limit=random.randrange(6)
+    report=run({'documents':docs,'queries':['alpha'],'where':{'tenant':'x'},'offset':offset,'limit':limit,'facets':['kind']})
+    result=report['results'][0]
+    assert result['total']==len(chosen)
+    assert [h['id'] for h in result['hits']]==[d['id'] for d in chosen[offset:offset+limit]]
+    counts=Counter(d['metadata']['kind'] for d in chosen if 'kind' in d['metadata'])
+    expected=[{'value':value,'count':count} for value,count in sorted(counts.items(),key=lambda pair:(-pair[1],json.dumps(pair[0],ensure_ascii=False,separators=(',',':'))))]
+    assert result['facets']['kind']['buckets']==expected
+    assert result['facets']['kind']['missing']==sum('kind' not in d['metadata'] for d in chosen)
+    restored=run({'snapshot':report['snapshot'],'queries':['alpha'],'where':{'tenant':'x'},'offset':offset,'limit':limit,'facets':['kind']})
+    assert restored['results']==report['results']
+print('Independent metadata oracle: 20 corpora, pagination, missing/null facets and snapshot reload passed')
