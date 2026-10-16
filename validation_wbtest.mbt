@@ -25,3 +25,15 @@ test "updates cannot conceal duplicate source identifiers" {
   } catch { _ => true }
   assert_true(failed)
 }
+
+///|
+test "facet ties use lexical canonical value order rather than string length" {
+  let index = build_index([
+    record([("id", String("a")), ("fields", record([("text", String("moon"))])), ("metadata", record([("kind", Null)]))]),
+    record([("id", String("b")), ("fields", record([("text", String("moon"))])), ("metadata", record([("kind", String("reference"))]))]),
+  ], ["text"])
+  let result = index.facets(["a", "b"], ["kind"])
+  let buckets = arr(get(get(result, "kind"), "buckets"))
+  assert_eq(get(buckets[0], "value"), String("reference"))
+  assert_eq(get(buckets[1], "value"), Null)
+}

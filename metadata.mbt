@@ -35,7 +35,7 @@ fn SearchIndex::facets(self : SearchIndex, ids : Array[String], fields : Array[S
       }
     }
     let keys = counts.keys().collect()
-    keys.sort_by(fn(a, b) { let order = counts[b].compare(counts[a]); if order == 0 { a.compare(b) } else { order } })
+    keys.sort_by(fn(a, b) { let order = counts[b].compare(counts[a]); if order == 0 { a.lexical_compare(b) } else { order } })
     result[field] = record([
       ("missing", Number(missing.to_double())),
       ("buckets", Array(keys.map(fn(key) { record([("value", values[key]), ("count", Number(counts[key].to_double()))]) }))),

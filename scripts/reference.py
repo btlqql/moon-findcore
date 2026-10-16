@@ -44,7 +44,7 @@ for iteration in range(20):
     assert [h['id'] for h in result['hits']]==[d['id'] for d in chosen[offset:offset+limit]]
     counts=Counter(d['metadata']['kind'] for d in chosen if 'kind' in d['metadata'])
     expected=[{'value':value,'count':count} for value,count in sorted(counts.items(),key=lambda pair:(-pair[1],json.dumps(pair[0],ensure_ascii=False,separators=(',',':'))))]
-    assert result['facets']['kind']['buckets']==expected
+    assert result['facets']['kind']['buckets']==expected, (iteration,result['facets']['kind']['buckets'],expected)
     assert result['facets']['kind']['missing']==sum('kind' not in d['metadata'] for d in chosen)
     restored=run({'snapshot':report['snapshot'],'queries':['alpha'],'where':{'tenant':'x'},'offset':offset,'limit':limit,'facets':['kind']})
     assert restored['results']==report['results']
