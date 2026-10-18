@@ -393,7 +393,7 @@ fn SearchIndex::evaluate(
 }
 
 ///|
-pub fn run(request : Value) -> Value raise {
+fn search_request(request : Value) -> Value raise {
   let snapshot = get(request, "snapshot")
   let fields = if snapshot != Null {
     string_list(get(snapshot, "fields"))
