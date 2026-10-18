@@ -33,7 +33,7 @@ fn SearchIndex::facets(
 ) -> Value {
   let result : Map[String, Value] = Map([])
   for field in fields {
-    let counts : Map[String, Int] = Map([])
+    let counts : Map[String, Int32] = Map([])
     let values : Map[String, Value] = Map([])
     let mut missing = 0
     for id in ids {

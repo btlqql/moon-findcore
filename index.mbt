@@ -1,9 +1,9 @@
 ///|
 pub(all) struct TextToken {
   term : String
-  position : Int
-  start : Int
-  end : Int
+  position : Int32
+  start : Int32
+  end : Int32
 } derive(Eq)
 
 ///|
@@ -52,9 +52,9 @@ pub fn analyze(source : String) -> Array[TextToken] {
 ///|
 pub struct SearchIndex {
   documents : Map[String, Value]
-  postings : Map[String, Map[String, Array[Int]]]
-  lengths : Map[String, Map[String, Int]]
-  totals : Map[String, Int]
+  postings : Map[String, Map[String, Array[Int32]]]
+  lengths : Map[String, Map[String, Int32]]
+  totals : Map[String, Int32]
   fields : Array[String]
 }
 
@@ -173,7 +173,7 @@ pub(all) enum Query {
 ///|
 struct QueryParser {
   tokens : Array[String]
-  mut cursor : Int
+  mut cursor : Int32
 }
 
 ///|
@@ -239,7 +239,7 @@ fn QueryParser::take(self : QueryParser) -> String raise InputError {
 }
 
 ///|
-fn QueryParser::atom(self : QueryParser, depth : Int) -> Query raise {
+fn QueryParser::atom(self : QueryParser, depth : Int32) -> Query raise {
   if depth > 64 {
     raise InputError("query nesting limit")
   }
@@ -283,8 +283,8 @@ fn QueryParser::atom(self : QueryParser, depth : Int) -> Query raise {
 ///|
 fn QueryParser::expression(
   self : QueryParser,
-  minimum : Int,
-  depth : Int,
+  minimum : Int32,
+  depth : Int32,
 ) -> Query raise {
   let mut left = self.atom(depth)
   while self.peek() != "" && self.peek() != ")" {

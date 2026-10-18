@@ -3,7 +3,7 @@
 Full text indexing and search, implemented in MoonBit with a JSON CLI and reusable library API.
 
 - Repository: [https://github.com/btlqql/moon-findcore](https://github.com/btlqql/moon-findcore)
-- Package: `btlqql/moon_findcore@0.2.0`
+- Package: `btlqql/moon_findcore@0.3.0`
 - License: Apache-2.0
 - Release scope: **0.2.0 revised component release**. The broader competition proposal in `docs/proposal.md` is a reference design, not a claim that every planned capability is implemented.
 
@@ -27,7 +27,7 @@ Pass `-` to read a UTF-8 JSON request from stdin. A single request must be at mo
 ## Library use
 
 ```sh
-moon add btlqql/moon_findcore@0.2.0
+moon add btlqql/moon_findcore@0.3.0
 ```
 
 In the consumer's `moon.pkg`:
@@ -59,7 +59,7 @@ node scripts/check.mjs
 python -B scripts/reference.py
 ```
 
-There are 12 checked fixture cases in `tests/cases.json`, executed both in MoonBit white-box tests and through the actual Node CLI. Independent reference checks use Python's standard library or separately written algorithms. Fixtures are synthetic and are not presented as production adoption evidence. See [input and output examples](docs/usage.md) and [current boundaries](docs/boundaries.md).
+There are 15 checked fixture cases in `tests/cases.json`, executed both in MoonBit white-box tests and through the actual Node CLI. Independent reference checks use Python's standard library or separately written algorithms. Fixtures are synthetic and are not presented as production adoption evidence. See [input and output examples](docs/usage.md) and [current boundaries](docs/boundaries.md).
 
 ## Current boundaries
 
@@ -79,3 +79,14 @@ Run the additional complete scenario:
 ```sh
 moon run cmd/main --target js -- examples/scenario-4.json
 ```
+
+
+## 2026-10-18 follow-up
+
+新增 compare 操作，对两份语料或更新请求在固定查询、筛选、排序及分页参数下执行检索，报告当前页文档新增、移除、顺序、分数及 total 的变化。比较输入配置不一致时拒绝请求，避免将参数改变误当作语料改变。
+
+变化范围明确为所返回窗口与总数，不证明整个索引等价。分页之外的具体文档未全部列出；浮点分数可受语料整体 BM25 统计影响。
+
+Repository release: 0.3.0; installable MoonCakes module: `btlqql/moon_findcore@0.3.0`. Earlier repository 1.0.0 labels are retained as history; the module uses the registry-compatible zero-major sequence.
+
+Current source contains 19 MoonBit test declarations and 15 CLI fixtures (generated fixture tests are included in the declaration count). Run `python -B scripts/followup_reference.py` for independent follow-up oracles and `examples/followup-20261018.json` for the new scenario.

@@ -10,6 +10,8 @@ pub fn analyze(String) -> Array[TextToken]
 
 pub fn build_index(Array[Value], Array[String]) -> SearchIndex raise
 
+pub fn compare_search(Value) -> Value raise
+
 pub fn execute(Json) -> Json raise
 
 pub fn from_json(Json) -> Value
