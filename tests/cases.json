@@ -508,5 +508,171 @@
     },
     "expected": {},
     "error": true
+  },
+  {
+    "name": "followup search update replay",
+    "request": {
+      "operation": "compare",
+      "old": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ]
+      },
+      "new": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ],
+        "actions": [
+          {
+            "id": "a",
+            "type": "delete"
+          },
+          {
+            "id": "b",
+            "type": "upsert",
+            "document": {
+              "id": "b",
+              "fields": {
+                "text": "moon"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expected": {
+      "changed_count": 1,
+      "queries/0/added": [
+        "b"
+      ],
+      "queries/0/removed": [
+        "a"
+      ]
+    },
+    "error": false
+  },
+  {
+    "name": "followup search identical replay",
+    "request": {
+      "operation": "compare",
+      "old": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ]
+      },
+      "new": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ]
+      }
+    },
+    "expected": {
+      "changed_count": 0,
+      "equal_on_queries": true
+    },
+    "error": false
+  },
+  {
+    "name": "followup query window mismatch",
+    "request": {
+      "operation": "compare",
+      "old": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ]
+      },
+      "new": {
+        "documents": [
+          {
+            "id": "a",
+            "fields": {
+              "text": "moon"
+            }
+          },
+          {
+            "id": "b",
+            "fields": {
+              "text": "sun"
+            }
+          }
+        ],
+        "queries": [
+          "moon"
+        ],
+        "limit": 1
+      }
+    },
+    "expected": {},
+    "error": true
   }
 ]

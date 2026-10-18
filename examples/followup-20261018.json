@@ -1,0 +1,57 @@
+{
+  "operation": "compare",
+  "old": {
+    "documents": [
+      {
+        "id": "a",
+        "fields": {
+          "text": "moon"
+        }
+      },
+      {
+        "id": "b",
+        "fields": {
+          "text": "sun"
+        }
+      }
+    ],
+    "queries": [
+      "moon"
+    ]
+  },
+  "new": {
+    "documents": [
+      {
+        "id": "a",
+        "fields": {
+          "text": "moon"
+        }
+      },
+      {
+        "id": "b",
+        "fields": {
+          "text": "sun"
+        }
+      }
+    ],
+    "queries": [
+      "moon"
+    ],
+    "actions": [
+      {
+        "id": "a",
+        "type": "delete"
+      },
+      {
+        "id": "b",
+        "type": "upsert",
+        "document": {
+          "id": "b",
+          "fields": {
+            "text": "moon"
+          }
+        }
+      }
+    ]
+  }
+}
