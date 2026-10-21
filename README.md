@@ -1,5 +1,9 @@
 # Moon FindCore
 
+## Competition direction status (2026-10-21)
+
+This historical retrieval library overlaps existing MoonRetrieve capabilities. It is not presented as an independently differentiated replacement by adding more retrieval endpoints. The btlqql replacement candidate is [ProtocolDiff](https://github.com/btlqql/moon-protocoldiff), a separate explicit protocol-machine comparison project. HistoryCheck belongs to 123123213weqw and is not reassigned to this account. Competition form replacement is pending; this notice does not claim organizer approval.
+
 Full text indexing and search, implemented in MoonBit with a JSON CLI and reusable library API.
 
 - Repository: [https://github.com/btlqql/moon-findcore](https://github.com/btlqql/moon-findcore)
